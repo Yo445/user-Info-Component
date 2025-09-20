@@ -1,0 +1,5 @@
+    <div class="container">
+      <h1>User Management</h1>
+      <app-user-info (userAdded)="onUserAdded($event)"></app-user-info>
+      <app-user-list [users]="users"></app-user-list>
+    </div>

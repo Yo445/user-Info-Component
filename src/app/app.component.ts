@@ -1,43 +1,30 @@
-import { Component, Output, EventEmitter } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-  import { MatFormFieldModule } from '@angular/material/form-field';
-
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { UserService } from './services/user.service';
+import { UserInfoComponent } from './user-info/user-info.component';
+import { UserListComponent } from './user-list/user-list.component';
 
 @Component({
-  selector: 'app-user-info',
+  selector: 'app-root',
   standalone: true,
-  imports: [FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
-template: `
-    <div class="user-form">
-      <mat-form-field appearance="fill">
-        <mat-label>Name</mat-label>
-        <input matInput [(ngModel)]="user.name" placeholder="Enter name">
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Email</mat-label>
-        <input matInput [(ngModel)]="user.email" placeholder="Enter email">
-      </mat-form-field>
-      <button mat-raised-button color="primary" (click)="addUser()">Add User</button>
-    </div>
-  `,
-  styles: [`
-    .user-form {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      max-width: 400px;
-      margin: 20px;
-    }
-  `]
+  imports: [CommonModule, UserInfoComponent, UserListComponent],
+  templateUrl:'./app.component.html',
+  styleUrl:'./app.component.css'
 })
-export class AppComponent {
-  @Output() userAdded = new EventEmitter<{ name: string; email: string }>();
-  user = { name: '', email: '' };
+export class AppComponent implements OnInit {
+  users: { name: string; email: string }[] = [];
 
-  addUser() {
-    if (this.user.name && this.user.email) {
-      this.userAdded.emit({ ...this.user });
-      this.user = { name: '', email: '' }; // Reset form
-    }
+  constructor(private userService: UserService) {}
+
+  ngOnInit() {
+    this.userService.getUsers().subscribe((users) => {
+      this.users = users;
+    });
+  }
+
+  onUserAdded(user: { name: string; email: string }) {
+    this.userService.addUser(user).subscribe((updatedUsers) => {
+      this.users = updatedUsers;
+    });
   }
 }

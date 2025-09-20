@@ -1,0 +1,21 @@
+<table class="user-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users; let i = index">
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <button class="remove-btn" (click)="removeUser(i)">Remove</button>
+          </td>
+        </tr>
+        <tr *ngIf="!users.length">
+          <td colspan="3" class="no-data">No users available</td>
+        </tr>
+      </tbody>
+    </table>
